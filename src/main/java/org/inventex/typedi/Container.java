@@ -113,4 +113,17 @@ public class Container {
     public static boolean has(String token) {
         return values.containsKey(token);
     }
+
+    public static void remove(Class<?> clazz) {
+        dependencies.remove(clazz);
+    }
+
+    public static void remove(String token) {
+        values.remove(token);
+    }
+
+    public static void reset() {
+        dependencies.clear();
+        values.clear();
+    }
 }
