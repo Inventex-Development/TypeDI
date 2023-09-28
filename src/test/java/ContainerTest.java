@@ -1,7 +1,4 @@
-import org.inventex.typedi.Container;
-import org.inventex.typedi.Factory;
-import org.inventex.typedi.Inject;
-import org.inventex.typedi.Service;
+import org.inventex.typedi.*;
 
 public class ContainerTest {
     public static void main(String[] args) {
