@@ -1,4 +1,5 @@
 import org.inventex.typedi.Container;
+import org.inventex.typedi.Factory;
 import org.inventex.typedi.Inject;
 import org.inventex.typedi.Service;
 
@@ -12,7 +13,7 @@ public class ContainerTest {
         System.out.println(other == service.other);
     }
 
-    @Service
+    @Service(global = true, factory = TestFactory.class)
     static class TestService {
         @Inject
         public OtherService other;
@@ -20,6 +21,15 @@ public class ContainerTest {
         public void test() {
             System.out.println("test method");
             other.other();
+        }
+    }
+
+    static class TestFactory implements Factory<TestService> {
+        @Override
+        public TestService create() {
+            TestService service = new TestService();
+            service.other = new OtherService();
+            return service;
         }
     }
 

@@ -8,4 +8,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface Service {
+    boolean global() default false;
+
+    Class<? extends Factory<?>> factory() default NullFactory.class;
 }

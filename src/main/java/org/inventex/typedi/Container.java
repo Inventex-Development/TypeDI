@@ -13,36 +13,52 @@ public class Container {
 
     private static Map<String, Object> values = new ConcurrentHashMap<>();
 
+
+    @SneakyThrows
     @SuppressWarnings("unchecked")
     public static <T> T get(Class<T> clazz) {
+        Service service = clazz.getDeclaredAnnotation(Service.class);
+        if (service == null)
+            throw new UnknownDependencyException(clazz.getName() + " is not a service");
+
+        Constructor<? extends Factory<?>> constructor = service.factory().getDeclaredConstructor();
+        constructor.setAccessible(true);
+        Factory<T> factory = (Factory<T>) constructor.newInstance();
+
+        return get(clazz, service.global(), factory);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T get(Class<T> clazz, boolean global, Factory<T> factory) {
+        if (!global)
+            return createInstance(clazz, factory);
+
         if (!has(clazz)) {
-            T instance = createInstance(clazz);
+            T instance = createInstance(clazz, factory);
             set(clazz, instance);
             return instance;
         }
+
         return (T) dependencies.get(clazz);
     }
 
     @SneakyThrows
-    private static <T> T createInstance(Class<T> clazz) {
+    private static <T> T createInstance(Class<T> clazz, Factory<T> factory) {
+        if (factory != null && !factory.getClass().equals(NullFactory.class))
+            return factory.create();
+
         Constructor<?> constructor = clazz.getDeclaredConstructors()[0];
         constructor.setAccessible(true);
 
         Class<?>[] types = constructor.getParameterTypes();
-        Annotation[][] annotations = constructor.getParameterAnnotations();
 
         int parameterCount = constructor.getParameterCount();
         Object[] args = new Object[parameterCount];
 
         for (int i = 0; i < parameterCount; i++) {
             Class<?> paramType = types[i];
-            Annotation[] paramAnnotations = annotations[i];
 
-            if (paramAnnotations.length == 0)
-                continue;
-
-            Annotation annotation = paramAnnotations[0];
-            if (!annotation.annotationType().equals(Inject.class))
+            if (!paramType.isAnnotationPresent(Service.class))
                 continue;
 
             args[i] = get(paramType);
@@ -68,6 +84,11 @@ public class Container {
         }
 
         return instance;
+    }
+
+    @SneakyThrows
+    private static <T> T createInstance(Class<T> clazz) {
+       return createInstance(clazz, null);
     }
 
     @SuppressWarnings("unchecked")
