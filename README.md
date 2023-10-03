@@ -5,7 +5,7 @@ the typescript framework [typedi](https://github.com/typestack/typedi)
 
 # Installation
 
-# Maven
+## Maven
 ```xml
 <repositories>
     <repository>
@@ -23,7 +23,7 @@ the typescript framework [typedi](https://github.com/typestack/typedi)
 </dependency>
 ```
 
-# Gradle
+## Gradle
 ```gradle
 allprojects {
     repositories {
