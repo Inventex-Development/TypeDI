@@ -3,6 +3,42 @@
 This is a small lightweight dependency injection tool inspired by the syntax of 
 the typescript framework [typedi](https://github.com/typestack/typedi)
 
+# Installation
+
+# Maven
+```xml
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+```
+
+```xml
+<dependency>
+    <groupId>com.github.Inventex-Development</groupId>
+    <artifactId>TypeDI</artifactId>
+    <version>1.0.3</version>
+</dependency>
+```
+
+# Gradle
+```gradle
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+
+```gradle
+dependencies {
+    implementation 'com.github.Inventex-Development:TypeDI:1.0.3'
+}
+```
+
 ## Dependency injection using constructors
 
 ```java
