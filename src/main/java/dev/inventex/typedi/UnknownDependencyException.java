@@ -1,4 +1,4 @@
-package org.inventex.typedi;
+package dev.inventex.typedi;
 
 /**
  * Represents an exception that is thrown when a dependency is not found or is invalid

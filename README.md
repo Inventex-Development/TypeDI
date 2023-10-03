@@ -6,14 +6,14 @@ the typescript framework [typedi](https://github.com/typestack/typedi)
 ## Dependency injection using constructors
 
 ```java
-import org.inventex.typedi.Service;
+import dev.inventex.typedi.Service;
 
 @Service
 public class ExampleInjectedService {
     public void sayHello() {
         System.out.println("Hello World");
     }
-    
+
     public int getValue() {
         return 42;
     }
@@ -22,7 +22,7 @@ public class ExampleInjectedService {
 @Service()
 public class ExampleService {
     public final int value;
-    
+
     public ExampleService(ExampleInjectedService injectedService) {
         injectedService.sayHello();
         this.value = injectedService.getValue();
@@ -32,7 +32,7 @@ public class ExampleService {
 
 ```java
 
-import org.inventex.typedi.Container;
+import dev.inventex.typedi.Container;
 
 public class Main {
     public static void main(String[] args) {
@@ -45,7 +45,7 @@ public class Main {
 ## Dependency injection using fields
 
 ```java
-import org.inventex.typedi.Service;
+import dev.inventex.typedi.Service;
 
 @Service
 public class ExampleInjectedService {
@@ -73,16 +73,16 @@ public class Main {
 ## Using global services
 
 ```java
-import org.inventex.typedi.Service;
+import dev.inventex.typedi.Service;
 
 @Service(global = true)
 public class MyGlobalService {
     private int value;
-    
+
     public void increment() {
         value++;
     }
-    
+
     public int getValue() {
         return value;
     }
@@ -107,16 +107,16 @@ public class Main {
 ## Using separated container environments
 
 ```java
-import org.inventex.typedi.Service;
+import dev.inventex.typedi.Service;
 
 @Service(global = true)
 public class ExampleService {
     private int value;
-    
+
     public void increment() {
         value++;
     }
-    
+
     public int getValue() {
         return value;
     }
@@ -124,16 +124,15 @@ public class ExampleService {
 ```
 
 ```java
-import org.inventex.typedi.Container;
-import org.inventex.typedi.Service;
+import dev.inventex.typedi.Container;
 
 public class Main {
     public static void main(String[] args) {
         ExampleService production = Container.of("production").get(ExampleService.class);
         ExampleService development = Container.of("development").get(ExampleService.class);
-        
+
         production.increment();
-        
+
         assert production != development;
         assert production.getValue() != development.getValue();
     }
@@ -143,7 +142,7 @@ public class Main {
 ## Using global variables
 
 ```java
-import org.inventex.typedi.Container;
+import dev.inventex.typedi.Container;
 
 public class Config {
     public void init() {
@@ -156,7 +155,7 @@ public class Database {
     public void connect() {
         String host = Container.get("MYSQL_HOST");
         int port = Container.get("MYSQL_PORT");
-        
+
         // ...
     }
 }
@@ -165,7 +164,7 @@ public class Database {
 ## Using factories to instantiate services
 
 ```java
-import org.inventex.typedi.Service;
+import dev.inventex.typedi.Service;
 
 public class MyServiceFactory implements Factory<MyService> {
     public MyService create() {
@@ -178,11 +177,11 @@ public class MyServiceFactory implements Factory<MyService> {
 @Service(factory = MyServiceFactory.class)
 public class MyService {
     private String secret;
-    
+
     public void setSecret(String secret) {
         this.secret = secret;
     }
-    
+
     public String getSecret() {
         return secret;
     }

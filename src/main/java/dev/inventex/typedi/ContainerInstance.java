@@ -1,4 +1,4 @@
-package org.inventex.typedi;
+package dev.inventex.typedi;
 
 import lombok.SneakyThrows;
 import java.lang.annotation.Annotation;

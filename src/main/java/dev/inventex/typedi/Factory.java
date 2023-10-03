@@ -1,4 +1,4 @@
-package org.inventex.typedi;
+package dev.inventex.typedi;
 
 /**
  * Represents a factory that creates instances of type {@code T}.

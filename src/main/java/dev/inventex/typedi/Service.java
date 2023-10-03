@@ -1,4 +1,4 @@
-package org.inventex.typedi;
+package dev.inventex.typedi;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

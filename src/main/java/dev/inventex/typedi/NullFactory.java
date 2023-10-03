@@ -1,4 +1,4 @@
-package org.inventex.typedi;
+package dev.inventex.typedi;
 
 /**
  * Represents a factory implementation that is a placeholder for not specifying a factory type.
