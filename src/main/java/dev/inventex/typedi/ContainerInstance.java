@@ -112,8 +112,7 @@ public class ContainerInstance {
     @SneakyThrows
     private <T> T createInstanceWithDependencies(Class<T> clazz) {
         // get the first constructor of the class
-        Constructor<?> constructor = clazz.getDeclaredConstructors()[0];
-        constructor.setAccessible(true);
+        Constructor<?> constructor = getConstructor(clazz);
 
         // create the arguments of the constructor call
         Class<?>[] types = constructor.getParameterTypes();
@@ -133,6 +132,40 @@ public class ContainerInstance {
 
         // create the instance with the resolved service arguments
         return (T) constructor.newInstance(args);
+    }
+
+    /**
+     * Resolve the constructor of the class that we want to construct the class with.
+     * If the class has multiple constructors, the one annotated with @ConstructWith will be used.
+     * If none is annotated, an exception will be thrown, because TypeDI cannot decide, which constructor to use.
+     * @param clazz the class to resolve the constructor of
+     * @return the resolved constructor
+     * @param <T> the type of the class
+     */
+    private <T> Constructor<?> getConstructor(Class<T> clazz) {
+        Constructor<?> constructor;
+
+        // if the class has only one constructor, use it to create the instance
+        Constructor<?>[] constructors = clazz.getDeclaredConstructors();
+        if (constructors.length == 1)
+            constructor = constructors[0];
+        // if the class has multiple constructors, use the one annotated with @ConstructWith
+        else {
+            // check for each constructor declared by the service's class
+            for (Constructor<?> test : constructors) {
+                if (test.isAnnotationPresent(ConstructWith.class)) {
+                    constructor = test;
+                    break;
+                }
+            }
+            // check if no constructor were indicated, for TypeDI to construct with
+            throw new IllegalStateException(
+                "Class " + clazz.getName() + " has multiple constructors, but none of them is annotated with " +
+                "@ConstructWith, therefore TypeDI cannot decide, which one to use.");
+        }
+
+        constructor.setAccessible(true);
+        return constructor;
     }
 
     /**
