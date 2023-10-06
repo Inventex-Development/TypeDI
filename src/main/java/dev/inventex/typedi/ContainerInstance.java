@@ -143,7 +143,7 @@ public class ContainerInstance {
      * @param <T> the type of the class
      */
     private <T> Constructor<?> getConstructor(Class<T> clazz) {
-        Constructor<?> constructor;
+        Constructor<?> constructor = null;
 
         // if the class has only one constructor, use it to create the instance
         Constructor<?>[] constructors = clazz.getDeclaredConstructors();
@@ -159,9 +159,11 @@ public class ContainerInstance {
                 }
             }
             // check if no constructor were indicated, for TypeDI to construct with
-            throw new IllegalStateException(
-                "Class " + clazz.getName() + " has multiple constructors, but none of them is annotated with " +
-                "@ConstructWith, therefore TypeDI cannot decide, which one to use.");
+            if (constructor == null)
+                throw new IllegalStateException(
+                    "Class " + clazz.getName() + " has multiple constructors, but none of them is annotated with " +
+                    "@ConstructWith, therefore TypeDI cannot decide, which one to use."
+                );
         }
 
         constructor.setAccessible(true);
